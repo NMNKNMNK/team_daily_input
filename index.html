@@ -3,954 +3,528 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>毎日の振り返りシート ✨</title>
+    <title>YMK攻略</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Nunito', sans-serif;
-            background: linear-gradient(135deg, #ffeef8 0%, #f0f9ff 50%, #f0fdf4 100%);
-            min-height: 100vh;
+            background: linear-gradient(135deg, #ffeef8 0%, #f0f8ff 100%);
+            font-family: 'Arial', sans-serif;
         }
-        .cute-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 2px solid #fce7f3;
-            box-shadow: 0 8px 32px rgba(236, 72, 153, 0.1);
-        }
-        .mood-button {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 3px solid transparent;
-        }
-        .mood-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-        .mood-button.selected {
-            border-color: #ec4899;
-            box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.2);
-        }
-        .stress-level {
-            height: 20px;
-            background: linear-gradient(90deg, #10b981 0%, #fbbf24 50%, #ef4444 100%);
-            border-radius: 10px;
-            position: relative;
-            cursor: pointer;
-        }
-        .stress-indicator {
-            width: 24px;
-            height: 24px;
-            background: white;
-            border: 3px solid #ec4899;
-            border-radius: 50%;
-            position: absolute;
-            top: -2px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .input-field {
-            border: 2px solid #f3e8ff;
-            border-radius: 12px;
-            padding: 12px 16px;
+        .card {
             background: rgba(255, 255, 255, 0.8);
-            transition: all 0.3s ease;
-        }
-        .input-field:focus {
-            outline: none;
-            border-color: #a855f7;
-            box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.1);
-            background: rgba(255, 255, 255, 1);
-        }
-        .section-header {
-            background: linear-gradient(135deg, #fce7f3 0%, #e0e7ff 100%);
-            padding: 16px 20px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            border: 2px solid #ddd6fe;
-        }
-        .floating-hearts {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            font-size: 20px;
-            color: #ec4899;
-            opacity: 0.6;
-            animation: float 3s ease-in-out infinite;
-            z-index: 40;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        .achievement-badge {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            color: white;
-            padding: 8px 16px;
+            backdrop-filter: blur(10px);
             border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin: 4px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .gratitude-heart {
-            color: #ef4444;
-            font-size: 18px;
-            margin-right: 8px;
-        }
-        
-        /* ハンバーガーメニューのスタイル */
-        .hamburger-menu {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 50;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 2px solid #fce7f3;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(236, 72, 153, 0.2);
-        }
-        
-        .hamburger-menu:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 30px rgba(236, 72, 153, 0.3);
-        }
-        
-        .side-menu {
-            position: fixed;
-            top: 0;
-            left: -400px;
-            width: 350px;
-            height: 100vh;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            z-index: 45;
-            transition: left 0.3s ease;
-            border-right: 2px solid #fce7f3;
-            box-shadow: 4px 0 20px rgba(236, 72, 153, 0.1);
-            overflow-y: auto;
-        }
-        
-        .side-menu.open {
-            left: 0;
-        }
-        
-        .menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 40;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .menu-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .menu-item {
-            padding: 16px 24px;
-            border-bottom: 1px solid #f3e8ff;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .menu-item:hover {
-            background: linear-gradient(135deg, #fce7f3 0%, #e0e7ff 100%);
-        }
-        
-        .record-card {
-            background: rgba(255, 255, 255, 0.8);
-            border: 2px solid #fce7f3;
-            border-radius: 16px;
-            padding: 16px;
-            margin: 8px 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .record-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.15);
-        }
-        
-        .save-notification {
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 25px;
-            z-index: 60;
-            transform: translateX(400px);
-            transition: transform 0.3s ease;
-            font-weight: 600;
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
-        }
-        
-        .save-notification.show {
-            transform: translateX(0);
-        }
-        
-        .page-title {
-            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #06b6d4 100%);
+        .gradient-text {
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
-        .mood-emoji {
-            font-size: 24px;
-            margin-right: 8px;
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b9d, #ffa8cc);
+            border: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
         }
-        
-        .stats-card {
-            background: linear-gradient(135deg, #fce7f3 0%, #e0e7ff 100%);
-            border: 2px solid #ddd6fe;
-            border-radius: 16px;
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 157, 0.4);
+        }
+        .hamburger {
+            cursor: pointer;
+            width: 30px;
+            height: 20px;
+            position: relative;
+            z-index: 1001;
+        }
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background: #ff6b9d;
+            margin: 4px 0;
+            transition: 0.3s;
+            border-radius: 3px;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: left 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .menu-overlay.active {
+            left: 0;
+        }
+        .menu-item {
+            display: block;
             padding: 20px;
+            font-size: 24px;
+            color: #ff6b9d;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            margin: 10px 0;
+            min-width: 200px;
             text-align: center;
+        }
+        .menu-item:hover {
+            background: rgba(255, 107, 157, 0.1);
+            transform: scale(1.05);
+        }
+        .day-color-mon { border-left: 6px solid #ff9ff3; }
+        .day-color-tue { border-left: 6px solid #54a0ff; }
+        .day-color-wed { border-left: 6px solid #5f27cd; }
+        .day-color-thu { border-left: 6px solid #00d2d3; }
+        .day-color-fri { border-left: 6px solid #ff9f43; }
+        .day-color-sat { border-left: 6px solid #ff6b9d; }
+        .page-content {
+            display: none;
+        }
+        .page-content.active {
+            display: block;
+        }
+        .attack-item {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #ff6b9d;
+        }
+        .tip-box {
+            background: linear-gradient(135deg, #ffeef8, #f0f8ff);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            border: 2px solid rgba(255, 107, 157, 0.2);
         }
     </style>
 </head>
-<body class="p-4">
-    <!-- ハンバーガーメニューボタン -->
-    <div class="hamburger-menu" onclick="toggleMenu()">
-        <i class="fas fa-bars text-pink-500 text-xl"></i>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-50 bg-white bg-opacity-80 backdrop-filter backdrop-blur-lg border-b border-pink-200">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <h1 class="text-2xl font-bold gradient-text">✨ YMK攻略 ✨</h1>
+            <div class="w-8"></div>
+        </div>
+    </header>
+
+    <!-- Menu Overlay -->
+    <div class="menu-overlay" id="menuOverlay">
+        <a href="#" class="menu-item" onclick="showPage('home')">🏠 ホーム</a>
+        <a href="#" class="menu-item" onclick="showPage('monday')">🌟 月曜日</a>
+        <a href="#" class="menu-item" onclick="showPage('tuesday')">💙 火曜日</a>
+        <a href="#" class="menu-item" onclick="showPage('wednesday')">💜 水曜日</a>
+        <a href="#" class="menu-item" onclick="showPage('thursday')">💚 木曜日</a>
+        <a href="#" class="menu-item" onclick="showPage('friday')">🧡 金曜日</a>
+        <a href="#" class="menu-item" onclick="showPage('saturday')">💖 土曜日</a>
     </div>
-    
-    <!-- サイドメニュー -->
-    <div class="side-menu" id="sideMenu">
-        <div class="p-6 border-b-2 border-pink-200">
-            <h2 class="text-2xl font-bold page-title flex items-center gap-2">
-                <i class="fas fa-heart"></i>
-                マイ日記
-            </h2>
-            <p class="text-gray-600 mt-2">毎日の記録を管理 💕</p>
-        </div>
-        
-        <div class="menu-item" onclick="showCurrentEntry()">
-            <i class="fas fa-edit text-purple-500"></i>
-            <span>今日の記録を書く</span>
-        </div>
-        
-        <div class="menu-item" onclick="showAllRecords()">
-            <i class="fas fa-list text-blue-500"></i>
-            <span>過去の記録を見る</span>
-        </div>
-        
-        <div class="menu-item" onclick="showStats()">
-            <i class="fas fa-chart-bar text-green-500"></i>
-            <span>統計・分析</span>
-        </div>
-        
-        <div class="menu-item" onclick="exportData()">
-            <i class="fas fa-download text-orange-500"></i>
-            <span>データを出力</span>
-        </div>
-        
-        <div class="p-6 border-t-2 border-pink-200 mt-auto">
-            <div class="text-sm text-gray-600">
-                <div class="flex justify-between mb-2">
-                    <span>総記録数:</span>
-                    <span id="totalRecords">0</span>
+
+    <!-- Main Content -->
+    <main class="pt-20 container mx-auto px-4 pb-8">
+        <!-- Home Page -->
+        <div id="home" class="page-content active">
+            <div class="text-center mb-8">
+                <h2 class="text-4xl font-bold gradient-text mb-4">🎮 YMK攻略ガイド 🎮</h2>
+                <p class="text-gray-600 text-lg">日替わりで変わるYMKの攻略情報をチェックしよう！</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                <div class="card p-6 day-color-mon cursor-pointer" onclick="showPage('monday')">
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-3">🌟</span>
+                        <h3 class="text-xl font-bold text-pink-600">月曜日</h3>
+                    </div>
+                    <p class="text-gray-600">新しい週のスタート！基本攻略をマスターしよう</p>
                 </div>
-                <div class="flex justify-between">
-                    <span>継続日数:</span>
-                    <span id="streakDays">0</span>
+
+                <div class="card p-6 day-color-tue cursor-pointer" onclick="showPage('tuesday')">
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-3">💙</span>
+                        <h3 class="text-xl font-bold text-blue-600">火曜日</h3>
+                    </div>
+                    <p class="text-gray-600">中級テクニックで差をつけよう</p>
+                </div>
+
+                <div class="card p-6 day-color-wed cursor-pointer" onclick="showPage('wednesday')">
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-3">💜</span>
+                        <h3 class="text-xl font-bold text-purple-600">水曜日</h3>
+                    </div>
+                    <p class="text-gray-600">週の中盤、特別な戦略を学ぼう</p>
+                </div>
+
+                <div class="card p-6 day-color-thu cursor-pointer" onclick="showPage('thursday')">
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-3">💚</span>
+                        <h3 class="text-xl font-bold text-green-600">木曜日</h3>
+                    </div>
+                    <p class="text-gray-600">上級者向けの高度な攻略法</p>
+                </div>
+
+                <div class="card p-6 day-color-fri cursor-pointer" onclick="showPage('friday')">
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-3">🧡</span>
+                        <h3 class="text-xl font-bold text-orange-600">金曜日</h3>
+                    </div>
+                    <p class="text-gray-600">週末前の最終調整とコツ</p>
+                </div>
+
+                <div class="card p-6 day-color-sat cursor-pointer" onclick="showPage('saturday')">
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-3">💖</span>
+                        <h3 class="text-xl font-bold text-pink-600">土曜日</h3>
+                    </div>
+                    <p class="text-gray-600">週末スペシャル攻略法</p>
                 </div>
             </div>
+
+            <div class="text-center mt-12">
+                <p class="text-gray-500">🎯 左上のメニューから各曜日の詳細攻略情報にアクセスできます！</p>
+            </div>
         </div>
-    </div>
-    
-    <!-- メニューオーバーレイ -->
-    <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
-    
-    <!-- 保存通知 -->
-    <div class="save-notification" id="saveNotification">
-        <i class="fas fa-check-circle mr-2"></i>
-        記録を保存しました！
-    </div>
-    
-    <div class="floating-hearts">
-        💕 ✨ 🌸
-    </div>
-    
-    <div class="max-w-4xl mx-auto" style="margin-left: auto; margin-right: auto;">
-        <!-- メインコンテンツ -->
-        <div id="mainContent">
-            <!-- 今日の記録入力フォーム -->
-            <div id="entryForm">
-                <!-- ヘッダー -->
+
+        <!-- Monday Page -->
+        <div id="monday" class="page-content">
+            <div class="max-w-4xl mx-auto">
                 <div class="text-center mb-8">
-                    <h1 class="text-4xl font-bold mb-2 page-title">
-                        <i class="fas fa-star"></i> 毎日の振り返りシート <i class="fas fa-star"></i>
-                    </h1>
-                    <p class="text-gray-600 text-lg">今日も一日お疲れさまでした！ 💖</p>
+                    <h2 class="text-4xl font-bold gradient-text mb-4">🌟 月曜日の攻略 🌟</h2>
+                    <p class="text-gray-600">新しい週のスタートダッシュを決めよう！</p>
                 </div>
 
-                <!-- 日付セクション -->
-                <div class="cute-card rounded-2xl p-6 mb-6">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-4">
-                            <i class="fas fa-calendar-heart text-3xl text-pink-500"></i>
-                            <div>
-                                <label class="text-lg font-semibold text-gray-700">記録する日付</label>
-                                <input type="date" class="input-field ml-4 text-lg" id="recordDate" onchange="loadEntry()">
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-2xl mb-2">🌟</div>
-                            <div class="text-sm text-gray-500">Day <span class="font-bold text-purple-600" id="dayCounter">1</span></div>
-                        </div>
+                <div class="card p-6 mb-6">
+                    <h3 class="text-2xl font-bold text-pink-600 mb-4">📝 基本攻略ポイント</h3>
+                    <div class="attack-item">
+                        <h4 class="font-bold text-lg mb-2">✨ 朝の準備</h4>
+                        <p class="text-gray-700">月曜日は気持ちを切り替えて、しっかりと準備をしよう</p>
+                    </div>
+                    <div class="attack-item">
+                        <h4 class="font-bold text-lg mb-2">🎯 目標設定</h4>
+                        <p class="text-gray-700">今週の目標を明確にして、計画を立てる</p>
+                    </div>
+                    <div class="attack-item">
+                        <h4 class="font-bold text-lg mb-2">💪 モチベーション維持</h4>
+                        <p class="text-gray-700">週の始まりを前向きに捉えて、エネルギーを高めよう</p>
                     </div>
                 </div>
 
-                <div class="grid md:grid-cols-2 gap-6">
-                    <!-- 気分セクション -->
-                    <div class="cute-card rounded-2xl p-6">
-                        <div class="section-header">
-                            <h3 class="text-xl font-bold flex items-center gap-3">
-                                <i class="fas fa-smile text-pink-500"></i>
-                                今日の気分はどうでしたか？
-                            </h3>
-                        </div>
-                        <div class="grid grid-cols-5 gap-4 justify-items-center">
-                            <div class="mood-button bg-red-100 hover:bg-red-200" data-mood="1" title="とても悪い">😢</div>
-                            <div class="mood-button bg-orange-100 hover:bg-orange-200" data-mood="2" title="悪い">😔</div>
-                            <div class="mood-button bg-yellow-100 hover:bg-yellow-200" data-mood="3" title="普通">😐</div>
-                            <div class="mood-button bg-green-100 hover:bg-green-200" data-mood="4" title="良い">😊</div>
-                            <div class="mood-button bg-blue-100 hover:bg-blue-200" data-mood="5" title="とても良い">😄</div>
-                        </div>
-                        <div class="mt-6">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">気分について詳しく教えてください 💭</label>
-                            <textarea class="input-field w-full h-20 resize-none" id="moodNote" placeholder="今日の気分について自由に書いてみてください..."></textarea>
-                        </div>
-                    </div>
-
-                    <!-- ストレスレベル -->
-                    <div class="cute-card rounded-2xl p-6">
-                        <div class="section-header">
-                            <h3 class="text-xl font-bold flex items-center gap-3">
-                                <i class="fas fa-heart-pulse text-purple-500"></i>
-                                ストレスレベル
-                            </h3>
-                        </div>
-                        <div class="mb-4">
-                            <div class="flex justify-between text-sm text-gray-600 mb-2">
-                                <span>😌 リラックス</span>
-                                <span>😓 ストレス</span>
-                            </div>
-                            <div class="stress-level" id="stressLevel">
-                                <div class="stress-indicator" id="stressIndicator" style="left: 30%;"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">ストレスの原因は何ですか？ 🤔</label>
-                            <textarea class="input-field w-full h-20 resize-none" id="stressNote" placeholder="ストレスの原因や対処方法について書いてみてください..."></textarea>
-                        </div>
-                    </div>
+                <div class="tip-box">
+                    <h4 class="text-xl font-bold text-pink-600 mb-3">💡 月曜日のコツ</h4>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li>早起きして余裕を持った1日のスタートを</li>
+                        <li>週の計画を立てて、優先順位を決める</li>
+                        <li>体調管理を意識して、健康的な習慣を</li>
+                    </ul>
                 </div>
 
-                <!-- メインコンテンツ -->
-                <div class="grid md:grid-cols-2 gap-6 mt-6">
-                    <!-- 今日の達成 -->
-                    <div class="cute-card rounded-2xl p-6">
-                        <div class="section-header">
-                            <h3 class="text-xl font-bold flex items-center gap-3">
-                                <i class="fas fa-trophy text-yellow-500"></i>
-                                今日やったこと・達成したこと
-                            </h3>
-                        </div>
-                        <div class="space-y-3">
-                            <input type="text" class="input-field w-full" id="achievement1" placeholder="✨ 達成したことを書いてみてください">
-                            <input type="text" class="input-field w-full" id="achievement2" placeholder="✨ どんな小さなことでもOK！">
-                            <input type="text" class="input-field w-full" id="achievement3" placeholder="✨ 自分を褒めてあげましょう">
-                        </div>
+                <div class="card p-6">
+                    <h3 class="text-2xl font-bold text-pink-600 mb-4">📊 進捗管理</h3>
+                    <div class="bg-gray-200 rounded-full h-4 mb-4">
+                        <div class="bg-gradient-to-r from-pink-400 to-pink-600 h-4 rounded-full" style="width: 20%"></div>
                     </div>
-
-                    <!-- よかったこと -->
-                    <div class="cute-card rounded-2xl p-6">
-                        <div class="section-header">
-                            <h3 class="text-xl font-bold flex items-center gap-3">
-                                <i class="fas fa-thumbs-up text-green-500"></i>
-                                今日よかったこと
-                            </h3>
-                        </div>
-                        <textarea class="input-field w-full h-32 resize-none" id="goodThings" placeholder="今日あった嬉しいことや良かったことを書いてみてください... 🌈"></textarea>
-                    </div>
-
-                    <!-- 改善したいこと -->
-                    <div class="cute-card rounded-2xl p-6">
-                        <div class="section-header">
-                            <h3 class="text-xl font-bold flex items-center gap-3">
-                                <i class="fas fa-seedling text-blue-500"></i>
-                                明日改善したいこと
-                            </h3>
-                        </div>
-                        <textarea class="input-field w-full h-32 resize-none" id="improvements" placeholder="明日はもっと良くするために、どんなことを意識したいですか？ 🌱"></textarea>
-                    </div>
-
-                    <!-- 明日の目標 -->
-                    <div class="cute-card rounded-2xl p-6">
-                        <div class="section-header">
-                            <h3 class="text-xl font-bold flex items-center gap-3">
-                                <i class="fas fa-bullseye text-red-500"></i>
-                                明日の目標
-                            </h3>
-                        </div>
-                        <div class="space-y-3">
-                            <input type="text" class="input-field w-full" id="goal1" placeholder="🎯 明日の目標 1">
-                            <input type="text" class="input-field w-full" id="goal2" placeholder="🎯 明日の目標 2">
-                            <input type="text" class="input-field w-full" id="goal3" placeholder="🎯 明日の目標 3">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 学びと感謝 -->
-                <div class="grid md:grid-cols-2 gap-6 mt-6">
-                    <!-- 今日の学び -->
-                    <div class="cute-card rounded-2xl p-6">
-                        <div class="section-header">
-                            <h3 class="text-xl font-bold flex items-center gap-3">
-                                <i class="fas fa-lightbulb text-yellow-500"></i>
-                                今日の学び・気づき
-                            </h3>
-                        </div>
-                        <textarea class="input-field w-full h-32 resize-none" id="learnings" placeholder="今日新しく学んだことや気づいたことはありますか？ 💡"></textarea>
-                    </div>
-
-                    <!-- 感謝していること -->
-                    <div class="cute-card rounded-2xl p-6">
-                        <div class="section-header">
-                            <h3 class="text-xl font-bold flex items-center gap-3">
-                                <i class="fas fa-heart text-red-500"></i>
-                                感謝していること
-                            </h3>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="flex items-center">
-                                <span class="gratitude-heart">💖</span>
-                                <input type="text" class="input-field flex-1" id="gratitude1" placeholder="感謝していることを書いてみてください">
-                            </div>
-                            <div class="flex items-center">
-                                <span class="gratitude-heart">💕</span>
-                                <input type="text" class="input-field flex-1" id="gratitude2" placeholder="どんな小さなことでも大丈夫です">
-                            </div>
-                            <div class="flex items-center">
-                                <span class="gratitude-heart">💝</span>
-                                <input type="text" class="input-field flex-1" id="gratitude3" placeholder="感謝の気持ちを大切に">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 保存ボタン -->
-                <div class="text-center mt-8">
-                    <button onclick="saveEntry()" class="bg-gradient-to-r from-pink-400 to-purple-500 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
-                        <i class="fas fa-save mr-2"></i>
-                        今日の記録を保存する 💾
-                    </button>
-                </div>
-
-                <!-- フッター -->
-                <div class="cute-card rounded-2xl p-6 mt-6 text-center">
-                    <div class="text-2xl mb-4">🌟 今日も一日お疲れさまでした！ 🌟</div>
-                    <div class="text-gray-600">
-                        明日もあなたらしく、素敵な一日を過ごしてくださいね 💕
-                    </div>
-                    <div class="mt-4 text-3xl">
-                        ✨ 🌸 💖 🦋 🌈 ✨
-                    </div>
-                </div>
-            </div>
-
-            <!-- 記録一覧画面 -->
-            <div id="recordsList" style="display: none;">
-                <div class="text-center mb-8">
-                    <h1 class="text-4xl font-bold mb-2 page-title">
-                        <i class="fas fa-book"></i> 過去の記録 <i class="fas fa-book"></i>
-                    </h1>
-                    <p class="text-gray-600 text-lg">あなたの成長の軌跡 📚</p>
-                </div>
-                
-                <div id="recordsContainer">
-                    <!-- ここに過去の記録が表示されます -->
-                </div>
-            </div>
-
-            <!-- 統計画面 -->
-            <div id="statsView" style="display: none;">
-                <div class="text-center mb-8">
-                    <h1 class="text-4xl font-bold mb-2 page-title">
-                        <i class="fas fa-chart-line"></i> 統計・分析 <i class="fas fa-chart-line"></i>
-                    </h1>
-                    <p class="text-gray-600 text-lg">あなたの記録を分析 📊</p>
-                </div>
-                
-                <div class="grid md:grid-cols-3 gap-6" id="statsContainer">
-                    <!-- ここに統計情報が表示されます -->
+                    <p class="text-gray-600">今週の進捗: 20% (月曜日完了)</p>
                 </div>
             </div>
         </div>
-    </div>
+
+        <!-- Tuesday Page -->
+        <div id="tuesday" class="page-content">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-8">
+                    <h2 class="text-4xl font-bold gradient-text mb-4">💙 火曜日の攻略 💙</h2>
+                    <p class="text-gray-600">中級テクニックで差をつけよう！</p>
+                </div>
+
+                <div class="card p-6 mb-6">
+                    <h3 class="text-2xl font-bold text-blue-600 mb-4">🔥 中級攻略法</h3>
+                    <div class="attack-item">
+                        <h4 class="font-bold text-lg mb-2">⚡ 効率化テクニック</h4>
+                        <p class="text-gray-700">作業効率を上げる具体的な方法を実践</p>
+                    </div>
+                    <div class="attack-item">
+                        <h4 class="font-bold text-lg mb-2">🎨 クリエイティブ思考</h4>
+                        <p class="text-gray-700">新しいアイデアを生み出すための思考法</p>
+                    </div>
+                    <div class="attack-item">
+                        <h4 class="font-bold text-lg mb-2">🤝 チームワーク</h4>
+                        <p class="text-gray-700">他の人との連携を強化する方法</p>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <h4 class="text-xl font-bold text-blue-600 mb-3">💡 火曜日のコツ</h4>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li>月曜日の反省点を活かして改善する</li>
+                        <li>新しい手法やツールを試してみる</li>
+                        <li>集中力を高める環境を整える</li>
+                    </ul>
+                </div>
+
+                <div class="card p-6">
+                    <h3 class="text-2xl font-bold text-blue-600 mb-4">📊 進捗管理</h3>
+                    <div class="bg-gray-200 rounded-full h-4 mb-4">
+                        <div class="bg-gradient-to-r from-blue-400 to-blue-600 h-4 rounded-full" style="width: 33%"></div>
+                    </div>
+                    <p class="text-gray-600">今週の進捗: 33% (火曜日完了)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wednesday Page -->
+        <div id="wednesday" class="page-content">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-8">
+                    <h2 class="text-4xl font-bold gradient-text mb-4">💜 水曜日の攻略 💜</h2>
+                    <p class="text-gray-600">週の中盤、特別な戦略を学ぼう！</p>
+                </div>
+
+                <div class="card p-6 mb-6">
+                    <h3 class="text-2xl font-bold text-purple-600 mb-4">🎯 特別戦略</h3>
+                    <div class="attack-item">
+                        <h4 class="font-bold text-lg mb-2">⚖️ バランス調整</h4>
+                        <p class="text-gray-700">週の中盤で疲れを感じた時の対処法</p>
+                    </div>
+                    <div class="attack-item">
+                        <h4 class="font-bold text-lg mb-2">🔄 方向修正</h4>
+                        <p class="text-gray-700">計画の見直しと軌道修正のタイミング</p>
+                    </div>
+                    <div class="attack-item">
+                        <h4 class="font-bold text-lg mb-2">💎 品質向上</h4>
+                        <p class="text-gray-700">成果物の質を高める方法</p>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <h4 class="text-xl font-bold text-purple-600 mb-3">💡 水曜日のコツ</h4>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li>週の中間地点で振り返りを行う</li>
+                        <li>残り半分の計画を再確認する</li>
+                        <li>疲労回復に時間を使う</li>
+                    </ul>
+                </div>
+
+                <div class="card p-6">
+                    <h3 class="text-2xl font-bold text-purple-600 mb-4">📊 進捗管理</h3>
+                    <div class="bg-gray-200 rounded-full h-4 mb-4">
+                        <div class="bg-gradient-to-r from-purple-400 to-purple-600 h-4 rounded-full" style="width: 50%"></div>
+                    </div>
+                    <p class="text-gray-600">今週の進捗: 50% (水曜日完了)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thursday Page -->
+        <div id="thursday" class="page-content">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-8">
+                    <h2 class="text-4xl font-bold gradient-text mb-4">💚 木曜日の攻略 💚</h2>
+                    <p class="text-gray-600">上級者向けの高度な攻略法！</p>
+                </div>
+
+                <div class="card p-6 mb-6">
+                    <h3 class="text-2xl font-bold text-green-600 mb-4">🚀 上級攻略テクニック</h3>
+                    <div class="attack-item">
+                        <h4 class="font-bold text-lg mb-2">⚡ 最適化手法</h4>
+                        <p class="text-gray-700">パフォーマンスを最大化する高度な手法</p>
+                    </div>
+                    <div class="attack-item">
+                        <h4 class="font-bold text-lg mb-2">🎓 スキル向上</h4>
+                        <p class="text-gray-700">専門性を高めるための学習方法</p>
+                    </div>
+                    <div class="attack-item">
+                        <h4 class="font-bold text-lg mb-2">📈 成果最大化</h4>
+                        <p class="text-gray-700">限られた時間で最大の成果を出す方法</p>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <h4 class="text-xl font-bold text-green-600 mb-3">💡 木曜日のコツ</h4>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li>難しい課題にチャレンジする</li>
+                        <li>創造性を発揮する時間を作る</li>
+                        <li>金曜日への準備を整える</li>
+                    </ul>
+                </div>
+
+                <div class="card p-6">
+                    <h3 class="text-2xl font-bold text-green-600 mb-4">📊 進捗管理</h3>
+                    <div class="bg-gray-200 rounded-full h-4 mb-4">
+                        <div class="bg-gradient-to-r from-green-400 to-green-600 h-4 rounded-full" style="width: 67%"></div>
+                    </div>
+                    <p class="text-gray-600">今週の進捗: 67% (木曜日完了)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Friday Page -->
+        <div id="friday" class="page-content">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-8">
+                    <h2 class="text-4xl font-bold gradient-text mb-4">🧡 金曜日の攻略 🧡</h2>
+                    <p class="text-gray-600">週末前の最終調整とコツ！</p>
+                </div>
+
+                <div class="card p-6 mb-6">
+                    <h3 class="text-2xl font-bold text-orange-600 mb-4">🏁 フィニッシュ戦略</h3>
+                    <div class="attack-item">
+                        <h4 class="font-bold text-lg mb-2">📋 総仕上げ</h4>
+                        <p class="text-gray-700">週の成果をまとめ、完成度を高める</p>
+                    </div>
+                    <div class="attack-item">
+                        <h4 class="font-bold text-lg mb-2">🎯 目標達成</h4>
+                        <p class="text-gray-700">週初めに立てた目標の達成度をチェック</p>
+                    </div>
+                    <div class="attack-item">
+                        <h4 class="font-bold text-lg mb-2">🔄 次週準備</h4>
+                        <p class="text-gray-700">来週への準備と引き継ぎ事項の整理</p>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <h4 class="text-xl font-bold text-orange-600 mb-3">💡 金曜日のコツ</h4>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li>週の成果を振り返って達成感を味わう</li>
+                        <li>未完了のタスクを来週に整理する</li>
+                        <li>週末のリフレッシュ計画を立てる</li>
+                    </ul>
+                </div>
+
+                <div class="card p-6">
+                    <h3 class="text-2xl font-bold text-orange-600 mb-4">📊 進捗管理</h3>
+                    <div class="bg-gray-200 rounded-full h-4 mb-4">
+                        <div class="bg-gradient-to-r from-orange-400 to-orange-600 h-4 rounded-full" style="width: 83%"></div>
+                    </div>
+                    <p class="text-gray-600">今週の進捗: 83% (金曜日完了)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Saturday Page -->
+        <div id="saturday" class="page-content">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-8">
+                    <h2 class="text-4xl font-bold gradient-text mb-4">💖 土曜日の攻略 💖</h2>
+                    <p class="text-gray-600">週末スペシャル攻略法！</p>
+                </div>
+
+                <div class="card p-6 mb-6">
+                    <h3 class="text-2xl font-bold text-pink-600 mb-4">🎉 週末特別戦略</h3>
+                    <div class="attack-item">
+                        <h4 class="font-bold text-lg mb-2">🌟 リフレッシュ</h4>
+                        <p class="text-gray-700">心身のリフレッシュで来週への活力を蓄える</p>
+                    </div>
+                    <div class="attack-item">
+                        <h4 class="font-bold text-lg mb-2">🎨 趣味の時間</h4>
+                        <p class="text-gray-700">好きなことに時間を使って創造性を高める</p>
+                    </div>
+                    <div class="attack-item">
+                        <h4 class="font-bold text-lg mb-2">👥 人とのつながり</h4>
+                        <p class="text-gray-700">家族や友人との時間を大切にする</p>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <h4 class="text-xl font-bold text-pink-600 mb-3">💡 土曜日のコツ</h4>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li>完全にリラックスする時間を作る</li>
+                        <li>新しい体験や学びにチャレンジ</li>
+                        <li>来週への準備を軽くしておく</li>
+                    </ul>
+                </div>
+
+                <div class="card p-6">
+                    <h3 class="text-2xl font-bold text-pink-600 mb-4">📊 週間完了</h3>
+                    <div class="bg-gray-200 rounded-full h-4 mb-4">
+                        <div class="bg-gradient-to-r from-pink-400 to-pink-600 h-4 rounded-full" style="width: 100%"></div>
+                    </div>
+                    <p class="text-gray-600">今週の進捗: 100% (土曜日完了) 🎉</p>
+                    <div class="text-center mt-4">
+                        <p class="text-2xl">🎊 お疲れ様でした！ 🎊</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
     <script>
-        // グローバル変数
-        let currentStressLevel = 30;
-        let selectedMood = null;
-
-        // 初期化
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('recordDate').value = new Date().toISOString().split('T')[0];
-            loadEntry();
-            updateMenuStats();
-            initializeEventListeners();
-        });
-
-        // イベントリスナーの初期化
-        function initializeEventListeners() {
-            // 気分ボタンの選択機能
-            document.querySelectorAll('.mood-button').forEach(button => {
-                button.addEventListener('click', function() {
-                    document.querySelectorAll('.mood-button').forEach(b => b.classList.remove('selected'));
-                    this.classList.add('selected');
-                    selectedMood = this.dataset.mood;
-                });
-            });
-
-            // ストレスレベルの調整機能
-            const stressLevel = document.getElementById('stressLevel');
-            const stressIndicator = document.getElementById('stressIndicator');
-            
-            stressLevel.addEventListener('click', function(e) {
-                const rect = this.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const percentage = (x / rect.width) * 100;
-                currentStressLevel = Math.max(0, Math.min(100, percentage));
-                stressIndicator.style.left = currentStressLevel + '%';
-            });
-
-            // 自動保存機能
-            const inputs = document.querySelectorAll('.input-field');
-            inputs.forEach(input => {
-                input.addEventListener('blur', autoSave);
-            });
-        }
-
-        // メニューの開閉
         function toggleMenu() {
-            const sideMenu = document.getElementById('sideMenu');
+            const hamburger = document.querySelector('.hamburger');
             const menuOverlay = document.getElementById('menuOverlay');
             
-            if (sideMenu.classList.contains('open')) {
-                sideMenu.classList.remove('open');
-                menuOverlay.classList.remove('active');
-            } else {
-                sideMenu.classList.add('open');
-                menuOverlay.classList.add('active');
-            }
+            hamburger.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
         }
 
-        // 現在の記録表示
-        function showCurrentEntry() {
-            hideAllViews();
-            document.getElementById('entryForm').style.display = 'block';
-            toggleMenu();
-        }
-
-        // 過去の記録表示
-        function showAllRecords() {
-            hideAllViews();
-            document.getElementById('recordsList').style.display = 'block';
-            loadAllRecords();
-            toggleMenu();
-        }
-
-        // 統計表示
-        function showStats() {
-            hideAllViews();
-            document.getElementById('statsView').style.display = 'block';
-            generateStats();
-            toggleMenu();
-        }
-
-        // 全ビューを非表示
-        function hideAllViews() {
-            document.getElementById('entryForm').style.display = 'none';
-            document.getElementById('recordsList').style.display = 'none';
-            document.getElementById('statsView').style.display = 'none';
-        }
-
-        // 記録の保存
-        function saveEntry() {
-            const date = document.getElementById('recordDate').value;
-            const entry = {
-                date: date,
-                mood: selectedMood,
-                moodNote: document.getElementById('moodNote').value,
-                stressLevel: currentStressLevel,
-                stressNote: document.getElementById('stressNote').value,
-                achievements: [
-                    document.getElementById('achievement1').value,
-                    document.getElementById('achievement2').value,
-                    document.getElementById('achievement3').value
-                ].filter(a => a.trim()),
-                goodThings: document.getElementById('goodThings').value,
-                improvements: document.getElementById('improvements').value,
-                goals: [
-                    document.getElementById('goal1').value,
-                    document.getElementById('goal2').value,
-                    document.getElementById('goal3').value
-                ].filter(g => g.trim()),
-                learnings: document.getElementById('learnings').value,
-                gratitude: [
-                    document.getElementById('gratitude1').value,
-                    document.getElementById('gratitude2').value,
-                    document.getElementById('gratitude3').value
-                ].filter(g => g.trim()),
-                timestamp: new Date().toISOString()
-            };
-            
-            localStorage.setItem(`journal-${date}`, JSON.stringify(entry));
-            showSaveNotification();
-            updateMenuStats();
-        }
-
-        // 自動保存
-        function autoSave() {
-            if (document.getElementById('recordDate').value) {
-                saveEntry();
-            }
-        }
-
-        // 記録の読み込み
-        function loadEntry() {
-            const date = document.getElementById('recordDate').value;
-            const savedEntry = localStorage.getItem(`journal-${date}`);
-            
-            if (savedEntry) {
-                const entry = JSON.parse(savedEntry);
-                
-                // 気分の復元
-                if (entry.mood) {
-                    selectedMood = entry.mood;
-                    document.querySelectorAll('.mood-button').forEach(b => b.classList.remove('selected'));
-                    document.querySelector(`[data-mood="${entry.mood}"]`).classList.add('selected');
-                }
-                
-                // ストレスレベルの復元
-                if (entry.stressLevel !== undefined) {
-                    currentStressLevel = entry.stressLevel;
-                    document.getElementById('stressIndicator').style.left = currentStressLevel + '%';
-                }
-                
-                // テキストフィールドの復元
-                document.getElementById('moodNote').value = entry.moodNote || '';
-                document.getElementById('stressNote').value = entry.stressNote || '';
-                document.getElementById('goodThings').value = entry.goodThings || '';
-                document.getElementById('improvements').value = entry.improvements || '';
-                document.getElementById('learnings').value = entry.learnings || '';
-                
-                // 配列の復元
-                if (entry.achievements) {
-                    document.getElementById('achievement1').value = entry.achievements[0] || '';
-                    document.getElementById('achievement2').value = entry.achievements[1] || '';
-                    document.getElementById('achievement3').value = entry.achievements[2] || '';
-                }
-                
-                if (entry.goals) {
-                    document.getElementById('goal1').value = entry.goals[0] || '';
-                    document.getElementById('goal2').value = entry.goals[1] || '';
-                    document.getElementById('goal3').value = entry.goals[2] || '';
-                }
-                
-                if (entry.gratitude) {
-                    document.getElementById('gratitude1').value = entry.gratitude[0] || '';
-                    document.getElementById('gratitude2').value = entry.gratitude[1] || '';
-                    document.getElementById('gratitude3').value = entry.gratitude[2] || '';
-                }
-            } else {
-                // 新しい記録の場合はフィールドをクリア
-                clearForm();
-            }
-            
-            updateDayCounter();
-        }
-
-        // フォームをクリア
-        function clearForm() {
-            selectedMood = null;
-            currentStressLevel = 30;
-            
-            document.querySelectorAll('.mood-button').forEach(b => b.classList.remove('selected'));
-            document.getElementById('stressIndicator').style.left = '30%';
-            document.querySelectorAll('.input-field').forEach(field => field.value = '');
-        }
-
-        // 過去の記録一覧を読み込み
-        function loadAllRecords() {
-            const records = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key.startsWith('journal-')) {
-                    const entry = JSON.parse(localStorage.getItem(key));
-                    records.push(entry);
-                }
-            }
-            
-            records.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            const container = document.getElementById('recordsContainer');
-            container.innerHTML = '';
-            
-            if (records.length === 0) {
-                container.innerHTML = `
-                    <div class="cute-card rounded-2xl p-8 text-center">
-                        <div class="text-6xl mb-4">📝</div>
-                        <h3 class="text-xl font-bold text-gray-600 mb-2">まだ記録がありません</h3>
-                        <p class="text-gray-500">最初の記録を書いてみましょう！</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            records.forEach(entry => {
-                const recordCard = createRecordCard(entry);
-                container.appendChild(recordCard);
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(page => {
+                page.classList.remove('active');
             });
+
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+
+            // Close menu
+            const hamburger = document.querySelector('.hamburger');
+            const menuOverlay = document.getElementById('menuOverlay');
+            hamburger.classList.remove('active');
+            menuOverlay.classList.remove('active');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
         }
 
-        // 記録カードの作成
-        function createRecordCard(entry) {
-            const div = document.createElement('div');
-            div.className = 'record-card';
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const menuOverlay = document.getElementById('menuOverlay');
+            const hamburger = document.querySelector('.hamburger');
             
-            const moodEmojis = ['', '😢', '😔', '😐', '😊', '😄'];
-            const moodTexts = ['', 'とても悪い', '悪い', '普通', '良い', 'とても良い'];
-            
-            div.innerHTML = `
-                <div class="flex items-center justify-between mb-3">
-                    <div class="flex items-center gap-3">
-                        <span class="text-2xl">${moodEmojis[entry.mood] || '😐'}</span>
-                        <div>
-                            <h3 class="font-bold text-lg">${entry.date}</h3>
-                            <p class="text-sm text-gray-600">気分: ${moodTexts[entry.mood] || '未記録'}</p>
-                        </div>
-                    </div>
-                    <button onclick="loadSpecificEntry('${entry.date}')" class="bg-purple-500 text-white px-4 py-2 rounded-full text-sm hover:bg-purple-600 transition-colors">
-                        <i class="fas fa-edit mr-1"></i>編集
-                    </button>
-                </div>
-                
-                ${entry.achievements && entry.achievements.length > 0 ? `
-                <div class="mb-2">
-                    <span class="text-sm font-semibold text-purple-600">達成したこと:</span>
-                    <p class="text-sm text-gray-700">${entry.achievements.join(', ')}</p>
-                </div>
-                ` : ''}
-                
-                ${entry.goodThings ? `
-                <div class="mb-2">
-                    <span class="text-sm font-semibold text-green-600">よかったこと:</span>
-                    <p class="text-sm text-gray-700">${entry.goodThings}</p>
-                </div>
-                ` : ''}
-                
-                ${entry.gratitude && entry.gratitude.length > 0 ? `
-                <div>
-                    <span class="text-sm font-semibold text-red-600">感謝:</span>
-                    <p class="text-sm text-gray-700">${entry.gratitude.join(', ')}</p>
-                </div>
-                ` : ''}
-            `;
-            
-            return div;
-        }
+            if (menuOverlay.classList.contains('active') && 
+                !menuOverlay.contains(event.target) && 
+                !hamburger.contains(event.target)) {
+                toggleMenu();
+            }
+        });
 
-        // 特定の記録を読み込み
-        function loadSpecificEntry(date) {
-            document.getElementById('recordDate').value = date;
-            showCurrentEntry();
-            loadEntry();
-        }
-
-        // 統計の生成
-        function generateStats() {
-            const records = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key.startsWith('journal-')) {
-                    const entry = JSON.parse(localStorage.getItem(key));
-                    records.push(entry);
-                }
-            }
-            
-            const container = document.getElementById('statsContainer');
-            container.innerHTML = '';
-            
-            if (records.length === 0) {
-                container.innerHTML = `
-                    <div class="cute-card rounded-2xl p-8 text-center col-span-3">
-                        <div class="text-6xl mb-4">📊</div>
-                        <h3 class="text-xl font-bold text-gray-600 mb-2">統計データがありません</h3>
-                        <p class="text-gray-500">記録を続けて統計を見てみましょう！</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            // 基本統計
-            const totalRecords = records.length;
-            const avgMood = records.filter(r => r.mood).reduce((sum, r) => sum + parseInt(r.mood), 0) / records.filter(r => r.mood).length || 0;
-            const avgStress = records.filter(r => r.stressLevel !== undefined).reduce((sum, r) => sum + r.stressLevel, 0) / records.filter(r => r.stressLevel !== undefined).length || 0;
-            
-            // 統計カードの作成
-            container.innerHTML = `
-                <div class="stats-card">
-                    <div class="text-3xl mb-2">📝</div>
-                    <div class="text-2xl font-bold text-purple-600">${totalRecords}</div>
-                    <div class="text-sm text-gray-600">総記録数</div>
-                </div>
-                
-                <div class="stats-card">
-                    <div class="text-3xl mb-2">😊</div>
-                    <div class="text-2xl font-bold text-green-600">${avgMood.toFixed(1)}</div>
-                    <div class="text-sm text-gray-600">平均気分レベル</div>
-                </div>
-                
-                <div class="stats-card">
-                    <div class="text-3xl mb-2">💙</div>
-                    <div class="text-2xl font-bold text-blue-600">${(100 - avgStress).toFixed(0)}%</div>
-                    <div class="text-sm text-gray-600">平均リラックス度</div>
-                </div>
-                
-                <div class="stats-card col-span-3">
-                    <h3 class="text-lg font-bold mb-4">最近の気分の変化 📈</h3>
-                    <div class="flex items-end justify-between h-20 bg-white rounded-lg p-4">
-                        ${records.slice(-7).map(record => {
-                            const height = (record.mood || 3) * 12;
-                            return `<div class="bg-gradient-to-t from-purple-400 to-pink-400 rounded-t w-8" style="height: ${height}px"></div>`;
-                        }).join('')}
-                    </div>
-                    <div class="text-xs text-gray-500 mt-2 text-center">最近7日間の気分推移</div>
-                </div>
-            `;
-        }
-
-        // メニューの統計更新
-        function updateMenuStats() {
-            const records = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key.startsWith('journal-')) {
-                    records.push(JSON.parse(localStorage.getItem(key)));
-                }
-            }
-            
-            document.getElementById('totalRecords').textContent = records.length;
-            
-            // 継続日数の計算（簡易版）
-            const dates = records.map(r => r.date).sort();
-            let streak = 0;
-            const today = new Date().toISOString().split('T')[0];
-            let currentDate = new Date(today);
-            
-            while (streak < 100) { // 無限ループ防止
-                const dateStr = currentDate.toISOString().split('T')[0];
-                if (dates.includes(dateStr)) {
-                    streak++;
-                    currentDate.setDate(currentDate.getDate() - 1);
-                } else {
-                    break;
-                }
-            }
-            
-            document.getElementById('streakDays').textContent = streak;
-        }
-
-        // 日数カウンターの更新
-        function updateDayCounter() {
-            const records = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key.startsWith('journal-')) {
-                    records.push(JSON.parse(localStorage.getItem(key)));
-                }
-            }
-            
-            const currentDate = document.getElementById('recordDate').value;
-            const sortedDates = records.map(r => r.date).sort();
-            const dayNumber = sortedDates.indexOf(currentDate) + 1;
-            
-            document.getElementById('dayCounter').textContent = dayNumber > 0 ? dayNumber : records.length + 1;
-        }
-
-        // 保存通知の表示
-        function showSaveNotification() {
-            const notification = document.getElementById('saveNotification');
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-
-        // データのエクスポート
-        function exportData() {
-            const records = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key.startsWith('journal-')) {
-                    records.push(JSON.parse(localStorage.getItem(key)));
-                }
-            }
-            
-            if (records.length === 0) {
-                alert('エクスポートする記録がありません。');
-                return;
-            }
-            
-            const dataStr = JSON.stringify(records, null, 2);
-            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-            
-            const exportFileDefaultName = `diary_backup_${new Date().toISOString().split('T')[0]}.json`;
-            
-            const linkElement = document.createElement('a');
-            linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', exportFileDefaultName);
-            linkElement.click();
-            
-            toggleMenu();
-            alert('記録をダウンロードしました！ 💾');
-        }
+        // Add some interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
     </script>
 </body>
 </html>
